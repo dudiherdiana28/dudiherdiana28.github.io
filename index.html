@@ -158,20 +158,28 @@
         </div>
         <div class="row justify-content-center">
           <div class="col-md-8 mb-3">
-            <form action="#">
+            <div class="alert alert-success alert-dismissible fade show d-none my-alert" role="alert">
+              <strong>Terima Kasih!</strong> Pesan kamu telah kami terima.
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <form action="#" name="contact-form">
               <div class="mb-3">
                 <label for="formGroupExampleInput" class="form-label">Your Name</label>
-                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Your Name" />
+                <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Your Name" name="nama" />
               </div>
               <div class="mb-3">
                 <label for="formGroupExampleInput2" class="form-label">Your Email</label>
-                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" />
+                <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com" name="email" />
               </div>
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label">Message</label>
-                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="pesan"></textarea>
               </div>
-              <button type="submit" class="btn btn-primary">Submit</button>
+              <button type="submit" class="btn btn-primary btn-kirim">Kirim Pesan</button>
+              <button class="btn btn-primary btn-loading d-none" type="button" disabled>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                Loading...
+              </button>
             </form>
           </div>
         </div>
@@ -207,6 +215,31 @@
       gsap.from(".sosial-media", { duration: 1, delay: 1, y: -100, opacity: 0, ease: "expo" })
       gsap.from(".navbar", { duration: 1.5, y: "-100", opacity: 0, ease: "bounce" })
       gsap.from(".display-4", { duration: 1, x: -50, opacity: 0, delay: 0.5, ease: "back" })
+    </script>
+
+    <script>
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzCeRMi3GYBpflIqDaj4a6K5Z1HHu2r2eO9nDmd0wisBLAcdl3ESRBB5_DJHHlxxEyl/exec"
+      const form = document.forms["contact-form"]
+      const btnKirim = document.querySelector(".btn-kirim")
+      const btnLoading = document.querySelector(".btn-loading")
+      const myAlert = document.querySelector(".my-alert")
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault()
+        //Ketika tombolo sumbit di klik
+        btnLoading.classList.toggle("d-none")
+        btnKirim.classList.toggle("d-none")
+        fetch(scriptURL, { method: "POST", body: new FormData(form) })
+          .then((response) => {
+            btnLoading.classList.toggle("d-none")
+            btnKirim.classList.toggle("d-none")
+            myAlert.classList.toggle("d-none")
+            //reset
+            form.reset()
+            console.log("Success!", response)
+          })
+          .catch((error) => console.error("Error!", error.message))
+      })
     </script>
   </body>
 </html>
